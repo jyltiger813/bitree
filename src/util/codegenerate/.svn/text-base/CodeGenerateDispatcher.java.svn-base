@@ -1,0 +1,165 @@
+package com.baidu.rencai.util.codegenerate;
+
+import com.baidu.rencai.util.codegenerate.bean.AbstractBeanGenerator;
+import com.baidu.rencai.util.codegenerate.bean.AbstractDaoGenerator;
+import com.baidu.rencai.util.codegenerate.bean.GenerateParamBean;
+import com.baidu.rencai.util.codegenerate.bean.ImplementBeanGenerator;
+import com.baidu.rencai.util.codegenerate.bean.ImplementDaoGenerator;
+import com.baidu.rencai.util.codegenerate.constant.CodeGenerateConstant;
+
+
+/**
+ * 类描述： 由 一个表生成对应的类
+ * 创建人：jinyongliang
+ * 创建时间：2012-7-23 下午04:51:55   
+ * 修改人：jinyongliang   
+ * 修改时间：2012-7-23 下午04:51:55   
+ * 修改备注：   
+ * @version 
+ */
+public  class CodeGenerateDispatcher {
+	
+	boolean ifFirstGenerate = false;//是否為初次生成代碼，如果非初次，實現類不會重新生成
+	public boolean isIfFirstGenerate() {
+		return ifFirstGenerate;
+	}
+
+	public void setIfFirstGenerate(boolean ifFirstGenerate) {
+		this.ifFirstGenerate = ifFirstGenerate;
+	}
+
+	GenerateParamBean paramBean ;
+
+	public GenerateParamBean getParamBean() {
+		return paramBean;
+	}
+
+	public void setParamBean(GenerateParamBean paramBean) {
+		this.paramBean = paramBean;
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		GenerateParamBean param = new GenerateParamBean();
+		param.setPacakageName("jyl.datacollect.sse.crawl.genesr");
+		param.setBaseDircStr("D:/workspace/winStock/src/");
+		param.setBaseClassName("RawPeriodReport");
+		
+		param.setDatasourceName("sse");
+		param.setSqlStr("SELECT * FROM  sse.dealedrecord");
+		//param.setSqlStr(sqlStr);
+		CodeGenerateDispatcher dispatcher = new CodeGenerateDispatcher();
+		dispatcher.setParamBean(param);
+		dispatcher.doGenerate();
+	}
+
+	/**
+	 * 
+	 */
+	public void doGenerate() {
+		// TODO 生成各种类
+	   String baseClassName = paramBean.getBaseClassName();
+	   String baseDircStr = paramBean.getBaseDircStr();
+	   String packageName = paramBean.getPacakageName();
+	   String sqlStr = paramBean.getSqlStr();
+	 //生成抽象bean类	
+	   /*
+	    * 	GenerateParamBean param = new GenerateParamBean();
+		param.setPacakageName("jyl.datacollect.sse.crawl.genesr.bean");
+		param.setBaseDircStr("D:/workspace/winStock/src/");
+		param.setNameSufFix(CodeGenerateConstant.abatractBeanSuffix);
+		param.setBaseClassName("RawPeriodReport");
+		//param.setDatasourceName("sse");
+		param.setSqlStr("SELECT * FROM  sse.dealedrecord");
+	    */
+	   GenerateParamBean abstractBeanParam = new GenerateParamBean();
+	   abstractBeanParam.setBaseClassName(baseClassName);
+	   abstractBeanParam.setNameSufFix(CodeGenerateConstant.abatractBeanSuffix);
+	   abstractBeanParam.setBaseDircStr(baseDircStr);
+	   abstractBeanParam.setSqlStr(sqlStr);
+	   abstractBeanParam.setPacakageName(packageName+CodeGenerateConstant.beanPackage);
+	   AbstractBeanGenerator abstractBeanGenerator = new AbstractBeanGenerator();
+	   abstractBeanGenerator.setParamBean(abstractBeanParam);
+	   abstractBeanGenerator.setIfFirstGenerate(ifFirstGenerate);
+	   abstractBeanGenerator.generateJavaFile();
+	   
+	   //生成bean实现类
+		/*GenerateParamBean implBeanParam = new GenerateParamBean();
+		implBeanParam.setPacakageName("jyl.datacollect.sse.crawl.genesr.bean");
+		param.setBaseDircStr("D:/workspace/winStock/src/");
+		param.setNameSufFix(CodeGenerateConstant.impBeanSuffix);
+		param.setBaseClassName("RawPeriodReport");
+		param.setSqlStr("SELECT * FROM  sse.dealedrecord");
+		ImplementBeanGenerator ab = new ImplementBeanGenerator();*/
+	   GenerateParamBean implBeanParam = new GenerateParamBean();
+	   implBeanParam.setBaseClassName(baseClassName);
+	   implBeanParam.setNameSufFix(CodeGenerateConstant.impBeanSuffix);
+	   implBeanParam.setBaseDircStr(baseDircStr);
+	   implBeanParam.setSqlStr(sqlStr);
+	   implBeanParam.setPacakageName(packageName+CodeGenerateConstant.beanPackage);
+	   ImplementBeanGenerator implBeanGenerator = new ImplementBeanGenerator();
+	   implBeanGenerator.setParamBean(implBeanParam);
+	   implBeanGenerator.setIfFirstGenerate(ifFirstGenerate);
+	   implBeanGenerator.generateJavaFile();
+	   
+	   //生成dao抽象类
+	   /*
+	    * GenerateParamBean param = new GenerateParamBean();
+		param.setPacakageName("jyl.datacollect.sse.crawl.genesr.dao");
+		param.setBaseDircStr("D:/workspace/winStock/src/");
+		param.setNameSufFix(CodeGenerateConstant.abatractDaoSuffix);
+		param.setBaseClassName("RawPeriodReport");
+		//param.setDatasourceName("sse");
+		param.setSqlStr("SELECT * FROM  sse.dealedrecord");
+		AbstractDaoGenerator ab = new AbstractDaoGenerator();
+		ab.setParamBean(param);
+		ab.generateJavaFile();
+	    * 
+	    */
+	   
+	   GenerateParamBean abstractDaoparam = new GenerateParamBean();
+	   abstractDaoparam.setBaseClassName(baseClassName);
+	   abstractDaoparam.setNameSufFix(CodeGenerateConstant.abatractDaoSuffix);
+	   abstractDaoparam.setBaseDircStr(baseDircStr);
+	   abstractDaoparam.setSqlStr(sqlStr);
+	   abstractDaoparam.setPacakageName(packageName+CodeGenerateConstant.daoPackage);
+	   AbstractDaoGenerator abstractDaoGenerator = new AbstractDaoGenerator();
+	   abstractDaoGenerator.setParamBean(abstractDaoparam);
+	   abstractDaoGenerator.setIfFirstGenerate(ifFirstGenerate);
+	   abstractDaoGenerator.generateJavaFile();
+	   
+	   //生成dao实现类
+	   /*
+	    * 	GenerateParamBean param = new GenerateParamBean();
+		param.setPacakageName("jyl.datacollect.sse.crawl.genesr.dao");
+		param.setBaseDircStr("D:/workspace/winStock/src/");
+	//	String nameSuffix 
+		param.setNameSufFix(CodeGenerateConstant.impDaoSuffix);
+		param.setBaseClassName("RawPeriodReport");
+		//param.setDatasourceName("sse");
+		param.setSqlStr("SELECT * FROM  sse.dealedrecord");
+		ImplementDaoGenerator ab = new ImplementDaoGenerator();
+		ab.setParamBean(param);
+		ab.generateJavaFile();
+	    */
+	   
+	   //ImplementDaoGenerator
+	   
+	   GenerateParamBean implementDaoParam = new GenerateParamBean();
+	   implementDaoParam.setBaseClassName(baseClassName);
+	   implementDaoParam.setNameSufFix( CodeGenerateConstant.impDaoSuffix);
+	   implementDaoParam.setBaseDircStr(baseDircStr);
+	   implementDaoParam.setSqlStr(sqlStr);
+	   implementDaoParam.setPacakageName(packageName+CodeGenerateConstant.daoPackage);
+	   ImplementDaoGenerator implementDaoGenerator = new ImplementDaoGenerator();
+	   implementDaoGenerator.setParamBean(implementDaoParam);
+	   implementDaoGenerator.setIfFirstGenerate(ifFirstGenerate);
+	   implementDaoGenerator.generateJavaFile();
+	   
+	}
+
+	
+}

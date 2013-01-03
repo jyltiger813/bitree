@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+		
+	<!--  dbcp连接池	
+	<bean id="dataSourceMySqlRenCai"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://211.99.195.101:3308/rencai?useUnicode=true&amp;characterEncoding=UTF-8</value>
+		</property>
+		<property name="username">
+			<value>rencai_ad</value>
+		</property>
+		<property name="password">
+			<value>128Com%</value>
+		</property>
+		<property name="maxActive">
+			<value>60</value>
+		</property>
+	</bean>-->
+	<!-- 数据分析抽取库 -->
+	 <bean id="incrementbak" class="org.logicalcobwebs.proxool.ProxoolDataSource" lazy-init="true">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <!--<property name="driverUrl" value="jdbc:mysql://211.151.137.113:3306/rencai_dev?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="user" value="rencai_dev"/>
+        <property name="password" value="rencai_dev"/>
+        -->
+      <!--   <property name="driverUrl" value="jdbc:mysql://58.83.216.121:3306/incrementbak?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="user" value="root"/>
+        <property name="password" value="manager"/> -->
+        <property name="driverUrl" value="jdbc:mysql://localhost:3306/incrementbak?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="user" value="root"/>
+        <property name="password" value="root"/>
+        <property name="alias" value="incrementbak.rc"/>
+	    <property name="minimumConnectionCount" value="1"/>
+	    <property name="maximumConnectionCount" value="50"/>
+	    <property name="trace" value="true"/>
+    </bean>
+    
+     <bean id="apache_js_log" class="org.logicalcobwebs.proxool.ProxoolDataSource" lazy-init="true">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <!--<property name="driverUrl" value="jdbc:mysql://211.151.137.113:3306/rencai_dev?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="user" value="rencai_dev"/>
+        <property name="password" value="rencai_dev"/>
+        -->
+      <!--   <property name="driverUrl" value="jdbc:mysql://58.83.216.121:3306/incrementbak?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="user" value="root"/>
+        <property name="password" value="manager"/> -->
+        <property name="driverUrl" value="jdbc:mysql://localhost:3306/apache_js_log?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="user" value="root"/>
+        <property name="password" value="root"/>
+        <property name="alias" value="apache_js_log.rc"/>
+	    <property name="minimumConnectionCount" value="1"/>
+	    <property name="maximumConnectionCount" value="50"/>
+	    <property name="trace" value="true"/>
+    </bean>
+    
+    <!-- 本地分析库  -->
+    <bean id="analysis" class="org.logicalcobwebs.proxool.ProxoolDataSource" lazy-init="true">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <!--<property name="driverUrl" value="jdbc:mysql://211.151.137.113:3306/rencai_dev?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="user" value="rencai_dev"/>
+        <property name="password" value="rencai_dev"/>
+        -->
+        <property name="driverUrl" value="jdbc:mysql://localhost:3306/analysis?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="user" value="root"/>
+        <property name="password" value="root"/>
+        <property name="alias" value="incrementbak.rc"/>
+	    <property name="minimumConnectionCount" value="1"/>
+	    <property name="maximumConnectionCount" value="50"/>
+	    <property name="trace" value="true"/>
+    </bean>
+	<!-- web&admin端配置 ，目前采用一个数据库，将来拆分数据库后，再对数据源配置进行拆分	-->
+	 <bean id="dataSourceMySqlRenCai" class="org.logicalcobwebs.proxool.ProxoolDataSource" lazy-init="true">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <!--<property name="driverUrl" value="jdbc:mysql://211.151.137.113:3306/rencai_dev?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="user" value="rencai_dev"/>
+        <property name="password" value="rencai_dev"/>
+        -->
+        <!--<property name="driverUrl" value="jdbc:mysql://localhost:3306/rencai?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        --><property name="user" value="rencaireader"/>
+        <property name="driverUrl" value="jdbc:mysql://211.151.137.89:3306/rencai?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="password" value="go2011rc"/>
+        <property name="alias" value="proxool.rc"/>
+	    <property name="minimumConnectionCount" value="1"/>
+	    <property name="maximumConnectionCount" value="50"/>
+	    <property name="trace" value="true"/>
+    </bean>
+	<bean id="sessionFactoryRenCai"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSourceMySqlRenCai" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.proxool.pool_alias">proxool.rc</prop>
+			</props>
+		</property>
+		<property name="mappingDirectoryLocations">
+        	<list >
+            	<value>classpath:com/baidu/rencai/database/</value>
+				<value>classpath:com/comm/admin/database/</value>
+           	</list>
+        </property>
+	</bean>	
+	<!--
+	<bean id="hibernateTemplateRenCai" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactoryRenCai"/>
+		</property>
+		<property name="allowCreate">
+	        <value>true</value>
+		</property>
+	</bean>  -->
+	<!--web事务配置  -->
+	<bean id="transactionManagerRc" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory"> 
+			<ref bean="sessionFactoryRenCai"/>
+		</property>
+	</bean>
+	<aop:config proxy-target-class="true">
+		<aop:advisor pointcut="execution(* com.baidu.admin.service..*.*(..))||execution(* com.comm.admin.service..*.*(..))"  advice-ref="txAdviceRc" order="0"/>
+	</aop:config>
+	<tx:advice id="txAdviceRc" transaction-manager="transactionManagerRc">
+		<tx:attributes>
+			<tx:method name="insert*"/>
+			<tx:method name="update*"/>
+			<tx:method name="del*"/>
+			<tx:method name="doUpdate*"/>
+			<tx:method name="execute*" />
+			<tx:method name="commit*" />
+			<tx:method name="new*" />
+			<tx:method name="upload*" />
+			<tx:method name="add*" />
+			<tx:method name="save*" />
+			<tx:method name="remove*" />
+			<tx:method name="*" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	
+    <!-- 广告配置 -->
+    <!-- 
+    <bean id="dataSourceMySqlRenCaiAd"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://211.99.195.101:3308/rencai_ad?useUnicode=true&amp;characterEncoding=UTF-8</value>
+		</property>
+		<property name="username">
+			<value>rencai_ad</value>
+		</property>
+		<property name="password">
+			<value>128Com%</value>
+		</property>
+		<property name="maxActive">
+			<value>60</value>
+		</property>
+	</bean>	 -->
+	<!--  -->
+	<bean id="dataSourceMySqlRenCaiAd" class="org.logicalcobwebs.proxool.ProxoolDataSource" lazy-init="true">
+        <property name="driver" value="com.mysql.jdbc.Driver"/><!--
+        <property name="driverUrl" value="jdbc:mysql://211.151.137.113:3306/rencai_ad_dev?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="user" value="rencai_dev"/>
+        <property name="password" value="rencai_dev"/>
+        -->
+        <property name="driverUrl" value="jdbc:mysql://211.151.137.90:3306/rencai_ad?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <!--<property name="driverUrl" value="jdbc:mysql://localhost:3306/rencai_ad?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        
+        --><property name="user" value="rencaireader"/>
+        <property name="password" value="go2011rc"/>
+        <property name="alias" value="proxool.ad"/>
+	    <property name="minimumConnectionCount" value="1"/>
+	    <property name="maximumConnectionCount" value="50"/>
+	    <property name="trace" value="true"/>
+    </bean>
+	<bean id="sessionFactoryRenCaiAd"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSourceMySqlRenCaiAd" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.proxool.pool_alias">proxool.ad</prop>
+			</props>
+		</property>
+		<property name="mappingDirectoryLocations">
+        	<list >
+            	<value>classpath:com/baidu/admin/advertisement/database</value>
+           	</list>
+        </property>
+	</bean>
+<!--  
+	<bean id="hibernateTemplateRenCaiAd" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactoryRenCaiAd"/>
+		</property>
+		<property name="allowCreate">
+	        <value>true</value>
+		</property>
+	</bean>
+	-->
+	 <!--广告事务配置  -->
+	<bean id="transactionManagerAd" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory"> 
+			<ref bean="sessionFactoryRenCaiAd"/>
+		</property>
+	</bean>
+	<aop:config proxy-target-class="true">
+		<aop:advisor pointcut="execution(* com.baidu.admin.service..*.*(..))||execution(* com.comm.admin.service..*.*(..))||execution(* com.baidu.admin.advertisement.bean..*.*(..))"  advice-ref="txAdviceAd" order="0"/>
+	</aop:config>
+	<tx:advice id="txAdviceAd" transaction-manager="transactionManagerAd">
+		<tx:attributes>
+			<tx:method name="insert*"/>
+			<tx:method name="update*"/>
+			<tx:method name="del*"/>
+			<tx:method name="doUpdate*"/>
+			<tx:method name="execute*" />
+			<tx:method name="commit*" />
+			<tx:method name="new*" />
+			<tx:method name="upload*" />
+			<tx:method name="add*" />
+			<tx:method name="save*" />
+			<tx:method name="remove*" />
+			<tx:method name="*" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	 <!-- 开始jotm的分布式事务配置 
+	 <bean id="jtaTxManager" class="org.springframework.transaction.jta.JtaTransactionManager"> 
+  		<property name="userTransaction" ref="jotmJta"/> 
+	 </bean>
+	 
+	 <bean id="jotmJta" class="org.springframework.transaction.jta.JotmFactoryBean"/>
+	 
+	 <bean id="dataSourceAd" class="org.enhydra.jdbc.pool.StandardXAPoolDataSource">
+		<property name="dataSource">
+			<bean class="org.enhydra.jdbc.standard.StandardXADataSource" destroy-method="shutdown"> 
+  		   		<property name="transactionManager" ref="jotmJta" /> 
+  				 <property name="driverName" value="com.mysql.jdbc.Driver"/> 
+  				 <property name="url" value="jdbc:mysql://127.0.0.1:3306/rencai_ad?useUnicode=true&amp;characterEncoding=UTF-8"/> 
+  			</bean>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>root</value>
+		</property>
+	</bean>	
+	 <bean id="dataSourceWeb" class="org.enhydra.jdbc.pool.StandardXAPoolDataSource">
+		<property name="dataSource">
+			<bean class="org.enhydra.jdbc.standard.StandardXADataSource" destroy-method="shutdown"> 
+  		   		<property name="transactionManager" ref="jotmJta" /> 
+  				 <property name="driverName" value="com.mysql.jdbc.Driver"/> 
+  				 <property name="url" value="jdbc:mysql://127.0.0.1:3306/rencai?useUnicode=true&amp;characterEncoding=UTF-8"/> 
+  			</bean>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>root</value>
+		</property>
+	</bean>	
+	<bean id="sessionFactoryAd" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"> 
+    	<property name="dataSource" ref="dataSourceAd"/> 
+    	<property name="mappingDirectoryLocations">
+        	<list >
+            	<value>classpath:com/baidu/admin/advertisement/database</value>
+           	</list>
+        </property>
+   		<property name="jtaTransactionManager"> <ref bean="jotmJta" /> </property> 
+  	</bean> 
+	<bean id="sessionFactoryWeb" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"> 
+    	<property name="dataSource" ref="dataSourceWeb"/> 
+    	<property name="mappingDirectoryLocations">
+        	<list >
+            	<value>classpath:classpath:com/baidu/rencai/database</value>
+            	<value>classpath:com/comm/admin/database</value>
+           	</list>
+        </property>
+   		<property name="jtaTransactionManager"> <ref bean="jotmJta" /> </property> 
+  	</bean> -->	
+	<!-- 结束jotm的分布式事务配置 -->
+	
+</beans>

@@ -1,0 +1,110 @@
+package com.baidu.rencai.util.codegenerate.srbaseclass;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import com.baidu.rencai.statistic.util.DateTimeUtil;
+
+/**
+ * 类描述：   
+ * 创建人：jinyongliang
+ * 创建时间：2012-10-10 下午03:32:05   
+ * 修改人：jinyongliang   
+ * 修改时间：2012-10-10 下午03:32:05   
+ * 修改备注：   
+ * @version 
+ */
+public class AbstractBaseDAO {
+	
+	/**
+	 * @param sqlStr
+	 * @param values2
+	 * @throws SQLException 
+	 */
+	 protected void excutePreparedParams(String sqlStr, ArrayList<Object> values,Connection con) throws SQLException {
+		PreparedStatement preS = con.prepareStatement(sqlStr);
+		int i = 1;
+		for(Object obj : values)
+		{
+			preS.setObject(i, obj);
+			i++;
+		}
+		 preS.execute();
+		if(con!=null)
+			con.close();
+	}
+
+	 
+	 /**
+	  * TODO now_jyl
+	  * 批量保存，使用反射获取数据
+		 * @param sqlStr
+		 * @param values2
+		 * @throws SQLException 
+		 */
+		 protected void excutePreparedParamsBatchSave(String sqlStr, ArrayList<Object> values,Connection con) throws SQLException {
+			PreparedStatement preS = con.prepareStatement(sqlStr);
+			int i = 1;
+			for(Object obj : values)
+			{
+				preS.setObject(i, obj);
+				i++;
+			}
+			 preS.execute();
+			if(con!=null)
+				con.close();
+		}
+		 
+		 /**
+		  * 
+		  * 执行多条插入语句sql
+			 * @param sqlStr
+			 * @param values2
+			 * @throws SQLException 
+			 */
+			 protected void excuteSqlStrs(String sqlStr,Connection con) throws SQLException {
+				 try{
+				Statement statement = con.createStatement();
+				statement.execute(sqlStr);
+				 }catch(Exception e)
+				 {
+					 e.printStackTrace();
+				 }finally{
+					 if(con!=null)
+						 con.close();
+				 }
+			}
+			 
+			 public static String convertObj2string(Object obj)
+			 {
+				 if(obj != null)
+				 {
+				 String result = "";
+				 if(obj  instanceof Integer||obj  instanceof Float||obj  instanceof Double ||obj  instanceof String)
+					 result= obj +"";
+				 if(obj  instanceof Timestamp)
+				 {
+					 Timestamp temp = (Timestamp)(obj);
+					Calendar cal = Calendar.getInstance();
+				    cal.setTimeInMillis( temp.getTime());
+					 result= DateTimeUtil.getQueryDateTimeWithZero(cal);
+				 }
+				 return "'"+result+"'";
+				 }else
+				 {
+					 return "'NULL'";
+				 }
+			 }
+			 
+			 public  static void main(String args[])
+			 {
+				 Float tempInt = 888.01f;
+				 String result = convertObj2string(tempInt);
+				 System.out.println("result:"+result);
+			 }
+}
