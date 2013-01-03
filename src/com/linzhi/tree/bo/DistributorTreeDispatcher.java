@@ -212,8 +212,8 @@ public class DistributorTreeDispatcher implements Serializable {
 		//处理未匹配的数据
 		if(beans!=null&&beans.size()>0)
 		{
-	//	dealUnMatchedDatas();
-	//	dealUnMatchedDtDatas();
+		dealUnMatchedDatas();
+		dealUnMatchedDtDatas();
 		}
 		isLock = false;
 	//	Timestamp maxTimestamp  = lastQueryTime;
@@ -302,9 +302,8 @@ public class DistributorTreeDispatcher implements Serializable {
 			dtTree.addNode(node);
 		}
 		
-		logger.info("size2:"+nonDtParentNode.size());
+		logger.error("nonDtParentNodesize2:"+nonDtParentNode.size());
 
-		logger.info("dsize:"+nonDtParentNode.size());
 		
 		//输出所有存在重复对应关系的id
 		for(long id : duplicateNode)
@@ -349,16 +348,13 @@ public class DistributorTreeDispatcher implements Serializable {
 		{
 			Long node = nonParentNodeArr1[loopNum];
 			if(node == null)
-			logger.info("nonParentNode:"+nonParentNode);
-			logger.info("node:"+node);
-
 			nonParentNode.remove(node);
 			ulTree.addNode(node);
 		}
 		
-		logger.info("size2:"+nonParentNode.size());
+		logger.error("nonUlParentNodeSize:"+nonParentNode.size());
 
-		logger.info("dsize:"+duplicateNode.size());
+		logger.error("dsize:"+duplicateNode.size());
 		
 		//输出所有存在重复对应关系的id
 		for(long id : duplicateNode)

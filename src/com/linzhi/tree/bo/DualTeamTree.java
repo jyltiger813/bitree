@@ -44,16 +44,23 @@ public class DualTeamTree implements Serializable{
 		DTNode dtNode = node.getDtNode();
 		long parentNodeID = node.getBean().getSponsorDt();
 		DTNode dtParentNode ;//父节点
-		IdNode parentIdNode = idTree.getInnerTree().get(parentNodeID);
+		boolean hasParentInf = false;
+		if(positionDT!=null&&(!("".equals(positionDT)))&&parentNodeID>0)
+			hasParentInf =true;
+			IdNode parentIdNode = null;
+			if(hasParentInf)
+			parentIdNode = idTree.getInnerTree().get(parentNodeID);
 		if(dtNode==null)
-		{   //初始化该节点
+		{   
+			 //初始化该节点
+			//初始化该节点
 			dtNode = new DTNode();
 			node.setDtNode(dtNode);
 			dtNode.setIdNode(node);
-			 //初始化该节点
 			nodeStatusBefore = 1;//首次添加，且未在nonParentNode集合中存在
 			if(parentIdNode!=null)//父节点存在
 			{
+			
 				DTNode replacedNode = null;
 				dtParentNode = parentIdNode.dtNode;
 				dtNode.setParent(dtParentNode) ;
@@ -70,7 +77,7 @@ public class DualTeamTree implements Serializable{
 					replacedNode.setParent(null);
 				countSubTotalNums(dtParentNode,dtNode,replacedNode);
 			}
-			else 
+			else if (hasParentInf&&(!nonParentNode.contains(node.getId())))
 				nonParentNode.add(node.getId());
 			
 		}else if(nonParentNode.contains(node.getId()))
@@ -98,7 +105,7 @@ public class DualTeamTree implements Serializable{
 		/*	else 
 				nonParentNode.add(node);*/
 			nodeStatusBefore = 2;//在nonParentNode集合中存在
-		}else// 修改操作，包括仅内容发生变化和节点位置发生变化,节点位置变化又可分为左右位置发生变化和父节点指向变化
+		}else if (hasParentInf)// 修改操作，包括仅内容发生变化和节点位置发生变化,节点位置变化又可分为左右位置发生变化和父节点指向变化
 		{
 			dtParentNode = parentIdNode.dtNode;
 			DTNode oldParent = node.getDtNode().getParent();
